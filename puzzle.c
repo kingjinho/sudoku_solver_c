@@ -37,17 +37,23 @@ int ** createPuzzle() {
 
 void printPuzzle(int ** puzzle) {
 
+    printf("------------------------------------\n");
     for (int i = 0; i < 9; i++) {
+        printf("|");
+
         //print each row
         for (int j = 0; j < 9; j++) {
             printf(" %d ", puzzle[i][j]);
-            if (j % 3 == 2 && j != 8) {
-                printf("\t");
+            if (j % 3 == 2) {
+                printf(" | ");
             }
         }
+
         printf("\n");
+
         if (i % 3 == 2 && i != 8) {
-            printf("\n");
+            printf("------------------------------------\n");
         }
     }
+    printf("------------------------------------\n");
 }
