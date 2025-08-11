@@ -3,6 +3,6 @@ project(sudoku_solver C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(sudoku_solver main.c
-        sudoku.h
-        puzzle.c)
+add_executable(sudoku_solver src/main.c
+        include/sudoku.h
+        src/puzzle.c)
