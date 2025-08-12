@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-extern char POSSIBLE;
+extern int UNSOLVED;
 extern int SIZE_ROWS;
 extern int SIZE_COLUMNS;
 
@@ -18,9 +18,12 @@ typedef struct Box {
 
 typedef struct Square {
     int number;
+
     /* 000000000
        987654321 */
-    char code;
+    int possible[9];
+    int solvable;
+
     Box *box;
     int row;
     int column;
@@ -28,8 +31,12 @@ typedef struct Square {
 
 int **createPuzzle();
 
-void printPuzzle(int **puzzle);
+void printPuzzle(Square ***sudoku);
 
 Square ***setupPuzzle(int **puzzle);
+
+int checkPuzzle(Square ***);
+
+int solveSquare(Square* square);
 
 #endif

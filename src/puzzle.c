@@ -6,8 +6,27 @@
 #include <stdlib.h>
 #include "../include/sudoku.h"
 
-Square ***setupPuzzle(int **puzzle) {
+int updateSudoku(Square ***sudoku, int row, int column) {
+    int number = sudoku[row][column]->number;
 
+    for (int x = 0; x < SIZE_ROWS; x++) {
+        if (sudoku[x][column]->possible[number - 1] == 0) {
+            sudoku[x][column]->solvable--;
+        }
+        sudoku[x][column]->possible[number - 1] = 1;
+    }
+
+    for (int x = 0; x < SIZE_ROWS; x++) {
+        if (sudoku[row][x]->possible[number - 1] == 0) {
+            sudoku[row][x]->solvable--;
+        }
+        sudoku[row][x]->possible[number - 1] = 1;
+    }
+
+    return 1;
+}
+
+Square ***setupPuzzle(int **puzzle) {
     Square ***sudoku = malloc(sizeof(Square **) * 9);
 
     /* loop through rows */
@@ -21,15 +40,38 @@ Square ***setupPuzzle(int **puzzle) {
             sudoku[i][j]->row = i;
             sudoku[i][j]->column = j;
 
+            //initialize
+            for (int x = 0; x < SIZE_ROWS; x++) {
+                sudoku[i][j]->possible[x] = 0;
+            }
+        }
+    }
+
+    for (int i = 0; i < SIZE_ROWS; i++) {
+        for (int j = 0; j < SIZE_COLUMNS; j++) {
             if (sudoku[i][j]->number != 0) {
-                sudoku[i][j]->code = POSSIBLE;
-            } else {
-                sudoku[i][j]->code = 0x0;
+                sudoku[i][j]->solvable = 0;
+                updateSudoku(sudoku, i, j);
+                UNSOLVED--;
             }
         }
     }
 
     return sudoku;
+}
+
+int checkPuzzle(Square ***sudoku) {
+    for (int i = 0; i < SIZE_ROWS; i++) {
+
+        for (int j = 0; j < SIZE_COLUMNS; j++) {
+            if (sudoku[i][j]->solvable == 1) {
+                solveSquare(sudoku[i][j]);
+                updateSudoku(sudoku, i, j);
+            }
+        }
+    }
+
+    return 1;
 }
 
 int **createPuzzle() {
@@ -60,14 +102,14 @@ int **createPuzzle() {
     return puzzle;
 }
 
-void printPuzzle(int **puzzle) {
+void printPuzzle(Square ***sudoku) {
     printf("------------------------------------\n");
     for (int i = 0; i < SIZE_ROWS; i++) {
         printf("|");
 
         //print each row
         for (int j = 0; j < SIZE_COLUMNS; j++) {
-            printf(" %d ", puzzle[i][j]);
+            printf(" %d ", sudoku[i][j] -> number);
             if (j % 3 == 2) {
                 printf(" | ");
             }
