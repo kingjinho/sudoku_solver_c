@@ -28,23 +28,44 @@ int updateSudoku(Square ***sudoku, int row, int column) {
 
 Square ***setupPuzzle(int **puzzle) {
     Square ***sudoku = malloc(sizeof(Square **) * 9);
+    Box **boxes = createBoxes();
+    int currentBox = 0;
 
     /* loop through rows */
     for (int i = 0; i < SIZE_ROWS; i++) {
         sudoku[i] = (Square **) malloc(sizeof(Square *) * 9);
-        /* loop through colums */
+        /* loop through columns */
         for (int j = 0; j < SIZE_COLUMNS; j++) {
             sudoku[i][j] = (Square *) malloc(sizeof(Square) * 9);
 
             sudoku[i][j]->number = puzzle[i][j];
             sudoku[i][j]->row = i;
             sudoku[i][j]->column = j;
+            sudoku[i][j]->solvable = 9;
+
+            boxes[currentBox]->squares[boxes[currentBox]->numbers] = sudoku[i][j];
+            sudoku[i][j]->box = boxes[currentBox];
+            boxes[currentBox]->numbers++;
 
             //initialize
             for (int x = 0; x < SIZE_ROWS; x++) {
                 sudoku[i][j]->possible[x] = 0;
             }
+
+            if (j == 2 || j == 5) {
+                currentBox++;
+            }
         }
+        currentBox -= 2;
+
+        if (i == 2) {
+            currentBox = 3;
+        }
+
+        if (i == 5) {
+            currentBox = 6;
+        }
+
     }
 
     for (int i = 0; i < SIZE_ROWS; i++) {
@@ -52,6 +73,7 @@ Square ***setupPuzzle(int **puzzle) {
             if (sudoku[i][j]->number != 0) {
                 sudoku[i][j]->solvable = 0;
                 updateSudoku(sudoku, i, j);
+                updateBoxes(sudoku, i, j);
                 UNSOLVED--;
             }
         }
@@ -62,7 +84,6 @@ Square ***setupPuzzle(int **puzzle) {
 
 int checkPuzzle(Square ***sudoku) {
     for (int i = 0; i < SIZE_ROWS; i++) {
-
         for (int j = 0; j < SIZE_COLUMNS; j++) {
             if (sudoku[i][j]->solvable == 1) {
                 solveSquare(sudoku[i][j]);
@@ -109,7 +130,7 @@ void printPuzzle(Square ***sudoku) {
 
         //print each row
         for (int j = 0; j < SIZE_COLUMNS; j++) {
-            printf(" %d ", sudoku[i][j] -> number);
+            printf(" %d ", sudoku[i][j]->number);
             if (j % 3 == 2) {
                 printf(" | ");
             }

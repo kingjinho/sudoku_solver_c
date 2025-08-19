@@ -11,6 +11,16 @@ int main() {
     printPuzzle(sudoku);
 
     checkPuzzle(sudoku);
+    checkPuzzle(sudoku);
+    checkPuzzle(sudoku);
+    checkPuzzle(sudoku);
+    checkPuzzle(sudoku);
+    checkPuzzle(sudoku);
+
+    printf("\n\n");
+
+    printPuzzle(sudoku);
+
 
     return 0;
 }
