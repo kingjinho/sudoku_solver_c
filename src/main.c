@@ -10,8 +10,12 @@ int main() {
 
     printPuzzle(sudoku->squares);
 
-    checkPuzzle(sudoku->squares, sudoku->boxes);
-    checkPuzzle(sudoku->squares, sudoku->boxes);
+    while (UNSOLVED > 0) {
+        checkPuzzle(sudoku->squares, sudoku->boxes);
+        if (UNSOLVED == 0) {
+            break;
+        }
+    }
 
     printf("\n\n");
 
