@@ -7,4 +7,5 @@ add_executable(sudoku_solver src/main.c
         include/sudoku.h
         src/puzzle.c
         src/square.c
-        src/box.c)
+        src/box.c
+        src/row.c)
