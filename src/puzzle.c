@@ -6,6 +6,15 @@
 #include <stdlib.h>
 #include "../include/sudoku.h"
 
+Sudoku *createSudoku(Square ***squares, Box **boxes) {
+    Sudoku *sudoku = malloc(sizeof(Sudoku));
+
+    sudoku->squares = squares;
+    sudoku->boxes = boxes;
+
+    return sudoku;
+}
+
 int updateSudoku(Square ***sudoku, int row, int column) {
     int number = sudoku[row][column]->number;
 
@@ -26,7 +35,7 @@ int updateSudoku(Square ***sudoku, int row, int column) {
     return 1;
 }
 
-Square ***setupPuzzle(int **puzzle) {
+Sudoku *setupPuzzle(int **puzzle) {
     Square ***sudoku = malloc(sizeof(Square **) * 9);
     Box **boxes = createBoxes();
     int currentBox = 0;
@@ -65,7 +74,6 @@ Square ***setupPuzzle(int **puzzle) {
         if (i == 5) {
             currentBox = 6;
         }
-
     }
 
     for (int i = 0; i < SIZE_ROWS; i++) {
@@ -79,18 +87,21 @@ Square ***setupPuzzle(int **puzzle) {
         }
     }
 
-    return sudoku;
+    return createSudoku(sudoku, boxes);
 }
 
-int checkPuzzle(Square ***sudoku) {
+int checkPuzzle(Square ***sudoku, Box **boxes) {
     for (int i = 0; i < SIZE_ROWS; i++) {
         for (int j = 0; j < SIZE_COLUMNS; j++) {
             if (sudoku[i][j]->solvable == 1) {
                 solveSquare(sudoku[i][j]);
                 updateSudoku(sudoku, i, j);
+                updateBoxes(sudoku, i, j);
             }
         }
     }
+
+    boxSingles(sudoku, boxes);
 
     return 1;
 }
