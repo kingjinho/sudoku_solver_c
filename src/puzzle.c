@@ -97,13 +97,13 @@ int checkPuzzle(Square ***sudoku, Box **boxes) {
                 solveSquare(sudoku[i][j]);
                 updateSudoku(sudoku, i, j);
                 updateBoxes(sudoku, i, j);
+
+                return 1;
             }
         }
     }
 
-    boxSingles(sudoku, boxes);
-
-    return 1;
+    return boxSingles(sudoku, boxes);
 }
 
 int **createPuzzle() {
